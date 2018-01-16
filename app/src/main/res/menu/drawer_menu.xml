@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/home"
+            android:title="Home"
+            >
+        </item>
+    <item
+        android:id="@+id/account"
+        android:title="Accounts"
+        >
+    </item>
+        <item
+            android:id="@+id/month"
+            android:title="Monthly"
+            >
+        </item>
+        <item
+            android:id="@+id/year"
+            android:title="Yearly"
+            >
+        </item>
+        <item
+            android:id="@+id/categories"
+            android:title="Categories"
+            >
+        </item>
+        <item
+            android:id="@+id/goals"
+            android:title="Goals"
+            >
+        </item>
+        <item
+            android:id="@+id/calender"
+            android:title="Calender"
+            >
+        </item>
+        <item
+            android:id="@+id/reminder"
+            android:title="Reminder"
+            >
+        </item>
+        <item
+            android:id="@+id/settings"
+            android:title="Settings"
+            >
+        </item>
+
+
+    </group>
+</menu>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.xpenditure.www.xpenditure.MainActivity">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.xpenditure.www.xpenditure.MainActivity">
+
+    <android.support.design.widget.NavigationView
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:id="@+id/navMenu"
+    android:gravity="start"
+    app:menu="@menu/drawer_menu">
+
+    </android.support.design.widget.NavigationView>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <include
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            layout="@layout/toolbar_layout"
+            />
+
+    </LinearLayout>
+
+   <com.github.mikephil.charting.charts.PieChart
+       android:layout_width="match_parent"
+       android:id="@+id/pieChart"
+       android:layout_height="250dp"
+       android:layout_marginTop="55dp">
+
+   </com.github.mikephil.charting.charts.PieChart>
+
+    <TextView
+        android:id="@+id/total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Money : "
+        android:layout_centerInParent="true"
+        android:textSize="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/pieChart"/>
+    <TextView
+        android:id="@+id/money"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" Rs. Money  "
+        android:layout_centerInParent="true"
+        android:textSize="25dp"
+        android:layout_below="@id/total"
+        android:layout_marginTop="10dp"/>
+
+    <Button
+        android:id="@+id/addMoney"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:text="Add Money"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="10dp"/>
+
+    <Button
+        android:id="@+id/removeMoney"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:text="Remove Money"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"/>
+</RelativeLayout>
+</android.support.v4.widget.DrawerLayout>
