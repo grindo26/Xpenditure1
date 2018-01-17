@@ -1,20 +1,19 @@
 package com.xpenditure.www.xpenditure;
 
-import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
-
-import java.util.ArrayList;
+import static com.xpenditure.www.xpenditure.R.id.calender;
 
 public class MainActivity extends AppCompatActivity {
     public double money;
@@ -22,49 +21,128 @@ public class MainActivity extends AppCompatActivity {
     public double remove;
     TextView total;
     RelativeLayout mainLayout;
-    PieChart pieChart;
     Toolbar toolBar;
+    DrawerLayout drawerLayout;
+    ActionBarDrawerToggle actionBarDrawerToggle;
+    NavigationView navigationView;
+    FragmentTransaction fragmentTransaction;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        pieChart = (PieChart) findViewById(R.id.pieChart);
         TextView total = (TextView) findViewById(R.id.total);
         toolBar = (Toolbar) findViewById(R.id.toolbar);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         setSupportActionBar(toolBar);
 
-        pieChart.setUsePercentValues(true);
-        pieChart.getDescription().setEnabled(false);
-        pieChart.setExtraOffsets(5, 10, 5, 5);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout , toolBar , R.string.drawer_open, R.string.drawer_close);
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
-        pieChart.setDragDecelerationFrictionCoef(0.95f);
-        pieChart.setDrawHoleEnabled(true);
-        pieChart.setHoleColor(Color.WHITE);
-        pieChart.setTransparentCircleRadius(61f);
 
-        ArrayList<PieEntry> yValues = new ArrayList<>();
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.frameLayout , new HomeFragment());
+        fragmentTransaction.commit();
 
-        yValues.add(new PieEntry(12f , "Catagory 1"));
-        yValues.add(new PieEntry(19f , "Catagory 2"));
-        yValues.add(new PieEntry(45f , "Catagory 3"));
-        yValues.add(new PieEntry(13f , "Catagory 4"));
-        yValues.add(new PieEntry(25f , "Catagory 5"));
-        yValues.add(new PieEntry(50f , "Catagory 6"));
 
-        pieChart.animateY(3000, Easing.EasingOption.EaseInOutCubic);
+        navigationView = (NavigationView) findViewById(R.id.navMenu);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener(){
 
-        PieDataSet dataSet = new PieDataSet(yValues , "Catagories");
-        dataSet.setSliceSpace(3f);
-        dataSet.setSelectionShift(5f);
-        dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId())
+                {
+                    case R.id.home:
+                        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.frameLayout , new HomeFragment());
+                        fragmentTransaction.commit();
+                        item.setChecked(true);
+                        drawerLayout.closeDrawers();
+                        break;
 
-        PieData data = new PieData((dataSet));
-        data.setValueTextSize(10f);
-        data.setValueTextColor(Color.WHITE);
+                    case R.id.month:
+                        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.frameLayout , new MonthFragment());
+                        fragmentTransaction.commit();
+                        item.setChecked(true);
+                        drawerLayout.closeDrawers();
+                        break;
+                    case R.id.year:
+                        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.frameLayout , new YearFragment());
+                        fragmentTransaction.commit();
+                        getSupportActionBar().setTitle("Yearly");
+                        item.setChecked(true);
+                        drawerLayout.closeDrawers();
+                        break;
+                    case R.id.categories:
+                        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.frameLayout , new CategoriesFragment());
+                        fragmentTransaction.commit();
+                        getSupportActionBar().setTitle("Choose Catagories");
+                        item.setChecked(true);
+                        drawerLayout.closeDrawers();
+                        break;
+                    case R.id.goals:
+                        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.frameLayout , new GoalsFragment());
+                        fragmentTransaction.commit();
+                        getSupportActionBar().setTitle("Set Goals");
+                        item.setChecked(true);
+                        drawerLayout.closeDrawers();
+                        break;
+                    case calender:
+                        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.frameLayout , new CalenderFragment());
+                        fragmentTransaction.commit();
+                        getSupportActionBar().setTitle("Calender");
+                        item.setChecked(true);
+                        drawerLayout.closeDrawers();
+                        break;
+                    case R.id.reminder:
+                        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.frameLayout , new ReminderFragment());
+                        fragmentTransaction.commit();
+                        getSupportActionBar().setTitle("Set Reminders");
+                        item.setChecked(true);
+                        drawerLayout.closeDrawers();
+                        break;
+                    case R.id.account:
+                        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.frameLayout , new AccountFragment());
+                        fragmentTransaction.commit();
+                        getSupportActionBar().setTitle("Accounts");
+                        item.setChecked(true);
+                        drawerLayout.closeDrawers();
+                        break;
+                    case R.id.settings:
+                        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.frameLayout , new SettingFragment());
+                        fragmentTransaction.commit();
+                        getSupportActionBar().setTitle("Settings");
+                        item.setChecked(true);
+                        drawerLayout.closeDrawers();
+                        break;
+                }
 
-        pieChart.setData(data);
 
+
+
+                return false;
+            }
+        });
+
+
+
+
+
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        actionBarDrawerToggle.syncState();
     }
 }

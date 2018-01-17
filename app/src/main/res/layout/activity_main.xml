@@ -3,26 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_main"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.xpenditure.www.xpenditure.MainActivity">
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.xpenditure.www.xpenditure.MainActivity">
-
-    <android.support.design.widget.NavigationView
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:id="@+id/navMenu"
-    android:gravity="start"
-    app:menu="@menu/drawer_menu">
-
-    </android.support.design.widget.NavigationView>
 
 
     <LinearLayout
@@ -38,51 +22,21 @@
 
     </LinearLayout>
 
-   <com.github.mikephil.charting.charts.PieChart
-       android:layout_width="match_parent"
-       android:id="@+id/pieChart"
-       android:layout_height="250dp"
-       android:layout_marginTop="55dp">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="55dp"
+        android:id="@+id/frameLayout">
 
-   </com.github.mikephil.charting.charts.PieChart>
+    </FrameLayout>
 
-    <TextView
-        android:id="@+id/total"
+
+    <android.support.design.widget.NavigationView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Total Money : "
-        android:layout_centerInParent="true"
-        android:textSize="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_below="@id/pieChart"/>
-    <TextView
-        android:id="@+id/money"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=" Rs. Money  "
-        android:layout_centerInParent="true"
-        android:textSize="25dp"
-        android:layout_below="@id/total"
-        android:layout_marginTop="10dp"/>
+        android:layout_height="match_parent"
+        android:id="@+id/navMenu"
+        android:layout_gravity="start"
+        app:menu="@menu/drawer_menu">
 
-    <Button
-        android:id="@+id/addMoney"
-        android:layout_width="120dp"
-        android:layout_height="50dp"
-        android:text="Add Money"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="50dp"
-        android:layout_marginLeft="10dp"/>
-
-    <Button
-        android:id="@+id/removeMoney"
-        android:layout_width="120dp"
-        android:layout_height="50dp"
-        android:text="Remove Money"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp"
-        android:layout_marginRight="10dp"
-        android:layout_alignParentRight="true"/>
-</RelativeLayout>
+    </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>

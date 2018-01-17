@@ -1,0 +1,67 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.xpenditure.www.xpenditure.HomeFragment">
+
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.xpenditure.www.xpenditure.MainActivity">
+
+    <!-- TODO: Update blank fragment layout -->
+    <com.github.mikephil.charting.charts.PieChart
+        android:layout_width="match_parent"
+        android:id="@+id/pieChart"
+        android:layout_height="300dp"
+        >
+
+    </com.github.mikephil.charting.charts.PieChart>
+
+    <TextView
+        android:id="@+id/total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Money : "
+        android:layout_centerInParent="true"
+        android:textSize="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/pieChart"/>
+    <TextView
+        android:id="@+id/money"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" Rs. Money  "
+        android:layout_centerInParent="true"
+        android:textSize="25dp"
+        android:layout_below="@id/total"
+        android:layout_marginTop="10dp"/>
+
+    <Button
+        android:id="@+id/addMoney"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:text="Add Money"
+        android:layout_below="@id/money"
+        android:layout_marginTop="20dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="20dp"/>
+
+    <Button
+        android:id="@+id/removeMoney"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:text="Remove Money"
+        android:layout_below="@id/money"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="50dp"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentRight="true"/>
+</RelativeLayout>
+
+    </FrameLayout>
