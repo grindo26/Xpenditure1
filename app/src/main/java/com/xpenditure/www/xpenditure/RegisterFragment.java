@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import static com.google.android.gms.internal.zzs.TAG;
 
 
 /**
@@ -33,7 +37,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     EditText editTextPassword;
     TextView textViewLoginText;
     ProgressDialog progressDialog;
-    FirebaseAuth firebaseAuth;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -54,14 +59,29 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         textViewLoginText = (TextView) rootView.findViewById(R.id.loginText);
         progressDialog = new ProgressDialog(this.getActivity());
 
-        firebaseAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
-//        if(firebaseAuth.getCurrentUser() != null){
-//            FragmentManager fragmentManager = getFragmentManager();
-//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//            fragmentTransaction.replace(R.id.frameLayout,new AccountFragment());
-//            fragmentTransaction.commit();
-//        }
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    AccountFragment accountFragment = new AccountFragment();
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.frameLayout, accountFragment);
+                    //fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+
+                }
+                // ...
+            }
+        };
 
         buttonReg.setOnClickListener(this);
         textViewLoginText.setOnClickListener(this);
@@ -115,7 +135,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         progressDialog.setMessage("Registering user");
         progressDialog.show();
 
-            firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener((Activity) getContext(), new OnCompleteListener<AuthResult>() {
+            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener((Activity) getContext(), new OnCompleteListener<AuthResult>() {
 
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -140,6 +160,19 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
 
 
         }
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
 
     }
 
