@@ -14,6 +14,7 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
@@ -22,19 +23,35 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment {
-    PieChart pieChart;
+    private PieChart pieChart;
+    private FirebaseAuth firebaseAuth;
 
     public HomeFragment() {
         // Required empty public constructor
     }
 
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         View rootView=inflater.inflate(R.layout.fragment_home, container, false);
+
+
         pieChart = (PieChart) rootView.findViewById(R.id.pieChart);
+
+//        firebaseAuth = FirebaseAuth.getInstance();
+//
+//        if(firebaseAuth.getCurrentUser() != null){
+//            FragmentManager fragmentManager = getFragmentManager();
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//            fragmentTransaction.replace(R.id.frameLayout,new AccountFragment());
+//            fragmentTransaction.commit();
+//        }
+
         pieChart.setUsePercentValues(true);
         pieChart.getDescription().setEnabled(false);
         pieChart.setExtraOffsets(5, 10, 5, 5);

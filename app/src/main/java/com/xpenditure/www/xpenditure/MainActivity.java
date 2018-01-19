@@ -2,7 +2,6 @@ package com.xpenditure.www.xpenditure;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -10,44 +9,35 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import static com.xpenditure.www.xpenditure.R.id.calender;
 
 public class MainActivity extends AppCompatActivity {
-    public double money;
-    public double add;
-    public double remove;
-    TextView total;
-    RelativeLayout mainLayout;
-    Toolbar toolBar;
-    DrawerLayout drawerLayout;
-    ActionBarDrawerToggle actionBarDrawerToggle;
-    NavigationView navigationView;
-    FragmentTransaction fragmentTransaction;
 
+    DrawerLayout drawerLayout;
+    ActionBarDrawerToggle mtoggel;
+    Toolbar toolbar;
+    FragmentTransaction fragmentTransaction;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TextView total = (TextView) findViewById(R.id.total);
-        toolBar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.navMenu);
 
-        setSupportActionBar(toolBar);
-
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout , toolBar , R.string.drawer_open, R.string.drawer_close);
-        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+        mtoggel = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawerLayout.addDrawerListener(mtoggel);
+        mtoggel.syncState();
 
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.frameLayout , new HomeFragment());
+        fragmentTransaction.add(R.id.frameLayout, new HomeFragment());
         fragmentTransaction.commit();
-
-
-        navigationView = (NavigationView) findViewById(R.id.navMenu);
+        getSupportActionBar().setTitle("Xpenditure");
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener(){
 
             @Override
@@ -111,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.account:
                         fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction.replace(R.id.frameLayout , new AccountFragment());
+                        fragmentTransaction.replace(R.id.frameLayout , new LoginFragment());
                         fragmentTransaction.commit();
                         getSupportActionBar().setTitle("Accounts");
                         item.setChecked(true);
@@ -130,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                return false;
+                return true;
             }
         });
 
@@ -141,8 +131,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        actionBarDrawerToggle.syncState();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mtoggel.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

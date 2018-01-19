@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "974375629586",
+    "firebase_url": "https://xpenditurespr.firebaseio.com",
+    "project_id": "xpenditurespr",
+    "storage_bucket": "xpenditurespr.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:974375629586:android:1d1677c3fe628e4d",
+        "android_client_info": {
+          "package_name": "com.xpenditure.www.xpenditure"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "974375629586-hkc4qj5t83tpaaju2lqmr83hq84s496f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxKwik7IxNPRGZbgyPxRLUc-yXe0UgMYs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
