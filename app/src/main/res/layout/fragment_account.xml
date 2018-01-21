@@ -1,43 +1,86 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_centerInParent="true"
     tools:context="com.xpenditure.www.xpenditure.AccountFragment">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
         android:layout_marginTop="20dp"
-        android:textAlignment="center"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
 
         >
 
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginBottom="50dp"
+            android:layout_marginLeft="50dp"
+            app:srcCompat="@android:drawable/ic_menu_camera" />
+
         <TextView
+            android:id="@+id/ChangeDP"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/profileImage"
+            android:layout_marginLeft="50dp"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:text="Edit Profile Picture"
+            android:textAlignment="center"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/viewEmailId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/profileImage"
             android:gravity="center"
-            android:text="Your Email Id"
+            android:text="Your Email will b shown here"
             android:textSize="20dp"
-            android:textStyle="bold"
-            android:id="@+id/viewEmailId"
-            />
+            android:layout_margin="10dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/viewFname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/viewEmailId"
+            android:gravity="center"
+            android:text="Your Fname will b shown here"
+            android:textSize="20dp"
+            android:layout_margin="10dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/viewLname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/viewFname"
+            android:gravity="center"
+            android:text="Your Lname will b shown here"
+            android:layout_margin="10dp"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
 
         <Button
+            android:id="@+id/buttonlogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/viewLname"
+            android:layout_margin="30dp"
             android:background="@color/colorPrimary"
-            android:layout_margin="20dp"
-            android:id="@+id/buttonlogout"
             android:text="Sign Out"
-            android:textAlignment="center"/>
+            android:textAlignment="center" />
 
-    </LinearLayout>
-
-
+    </RelativeLayout>
 
 
 </FrameLayout>

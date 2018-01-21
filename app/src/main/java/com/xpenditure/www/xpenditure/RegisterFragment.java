@@ -23,6 +23,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import static com.google.android.gms.internal.zzs.TAG;
 
@@ -35,9 +37,13 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     Button buttonReg;
     EditText editTextEmail;
     EditText editTextPassword;
+    EditText editTextLname;
+    EditText editTextFnmae;
+    EditText editTextMobile;
     TextView textViewLoginText;
     ProgressDialog progressDialog;
     private FirebaseAuth mAuth;
+    private DatabaseReference databaseReference;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     public RegisterFragment() {
@@ -56,10 +62,15 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         buttonReg = (Button) rootView.findViewById(R.id.buttonReg);
         editTextEmail = (EditText) rootView.findViewById(R.id.regemail);
         editTextPassword = (EditText) rootView.findViewById(R.id.regpassword);
+        editTextFnmae = (EditText) rootView.findViewById(R.id.Fname);
+        editTextLname = (EditText) rootView.findViewById(R.id.Lname);
+//        editTextMobile = (EditText) rootView.findViewById(R.id.phoneNo);
         textViewLoginText = (TextView) rootView.findViewById(R.id.loginText);
         progressDialog = new ProgressDialog(this.getActivity());
 
+
         mAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -83,8 +94,10 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
             }
         };
 
+
         buttonReg.setOnClickListener(this);
         textViewLoginText.setOnClickListener(this);
+
 
 
         return rootView;
@@ -111,8 +124,12 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     }
 
     private void registeruser() {
-        String email = editTextEmail.getText().toString().trim();
+        final String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
+        final String Fname = editTextFnmae.getText().toString().trim();
+        final String Lname = editTextLname.getText().toString().trim();
+//        String mobile= editTextMobile.getText().toString().trim();
+
 
         if (TextUtils.isEmpty(email)) {
             //eamil is empty
@@ -128,38 +145,79 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
             //eamil is empty
             Toast.makeText(this.getActivity(), "Password shoulde be grater than 8 characters!", Toast.LENGTH_SHORT).show();
             return;
+        } if (TextUtils.isEmpty(Fname)) {
+            //eamil is empty
+            Toast.makeText(this.getActivity(), "Please enter Password!", Toast.LENGTH_SHORT).show();
+            return;
+        } if (TextUtils.isEmpty(Lname)) {
+            //eamil is empty
+            Toast.makeText(this.getActivity(), "Please enter Password!", Toast.LENGTH_SHORT).show();
+            return;
         }
+// if (TextUtils.isEmpty(mobile)) {
+//            //eamil is empty
+//            Toast.makeText(this.getActivity(), "Please enter Password!", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        if (mobile.length() != 10) {
+//            //eamil is empty
+//            Toast.makeText(this.getActivity(), "Password shoulde be grater than 8 characters!", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
 
         // if validation is ok
         progressDialog.setMessage("Registering user");
         progressDialog.show();
 
-            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener((Activity) getContext(), new OnCompleteListener<AuthResult>() {
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener((Activity) getContext(), new OnCompleteListener<AuthResult>() {
 
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(RegisterFragment.this.getActivity(), "Registered sucessfully", Toast.LENGTH_SHORT).show();
-                        progressDialog.hide();
-
-                        LoginFragment loginFragment= new LoginFragment();
-                        FragmentManager fragmentManager = getFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.frameLayout, loginFragment );
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(RegisterFragment.this.getActivity(), "Registered sucessfully", Toast.LENGTH_SHORT).show();
+                    progressDialog.hide();
 
 
-                    } else {
-                        Toast.makeText(RegisterFragment.this.getActivity(), "Registeration unsucessful", Toast.LENGTH_SHORT).show();
-                        progressDialog.hide();
-                    }
+                    String Fname = editTextFnmae.getText().toString().trim();
+                    String Lname = editTextLname.getText().toString().trim();
+//                    String mobile= editTextFnmae.getText().toString().trim();
+                    String email = editTextEmail.getText().toString().trim();
+
+//                    userInformation userInformation= new userInformation();
+
+//                    FirebaseUser user = mAuth.getCurrentUser();
+
+
+                    //saving user data into database
+                    databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
+                    DatabaseReference currentUser = databaseReference.child(mAuth.getCurrentUser().getUid());
+                    currentUser.child("First Name").setValue(Fname);
+                    currentUser.child("Last Name").setValue(Lname);
+                    currentUser.child("Email ID").setValue(email);
+                    currentUser.child("Image").setValue("Default");
+                   Toast.makeText(RegisterFragment.this.getActivity(),"Information Saved!!",Toast.LENGTH_LONG).show();
+
+
+                    //Going to login Fragment
+                    LoginFragment loginFragment = new LoginFragment();
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.frameLayout, loginFragment);
+                    //fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+
+
+                } else {
+                    Toast.makeText(RegisterFragment.this.getActivity(), "Registeration unsucessful", Toast.LENGTH_SHORT).show();
+                    progressDialog.hide();
                 }
-            });
+            }
+        });
 
 
-        }
+    }
+
     @Override
     public void onStop() {
         super.onStop();
@@ -174,5 +232,11 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         mAuth.addAuthStateListener(mAuthListener);
     }
 
+    private void saveUserInformation() {
+
+
     }
+
+
+}
 
