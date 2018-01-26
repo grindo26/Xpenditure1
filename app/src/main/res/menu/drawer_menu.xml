@@ -5,47 +5,56 @@
         <item
             android:id="@+id/home"
             android:title="Home"
+            android:icon="@drawable/ic_home"
             >
         </item>
 
         <item
             android:id="@+id/month"
             android:title="Monthly"
+            android:icon="@drawable/ic_assessment"
             >
         </item>
         <item
             android:id="@+id/year"
             android:title="Yearly"
+            android:icon="@drawable/ic_assessment"
             >
         </item>
         <item
             android:id="@+id/categories"
             android:title="Categories"
+            android:icon="@drawable/ic_dashboard"
             >
         </item>
         <item
             android:id="@+id/goals"
             android:title="Goals"
+            android:icon="@drawable/ic_done"
             >
         </item>
         <item
             android:id="@+id/calender"
             android:title="Calender"
+            android:icon="@drawable/ic_assessment"
             >
         </item>
         <item
             android:id="@+id/reminder"
             android:title="Reminder"
+            android:icon="@drawable/ic_reminder"
             >
         </item>
         <item
             android:id="@+id/account"
             android:title="Accounts"
+            android:icon="@drawable/ic_person"
             >
         </item>
         <item
             android:id="@+id/settings"
             android:title="Settings"
+            android:icon="@drawable/ic_settings"
             >
         </item>
 

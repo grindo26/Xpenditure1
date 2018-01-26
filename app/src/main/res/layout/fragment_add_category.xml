@@ -1,0 +1,50 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.xpenditure.www.xpenditure.AddCategoryFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+   <RelativeLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:orientation="vertical"
+       android:padding="20dp">
+
+       <TextView
+           android:id="@+id/headercat"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="Add Category "
+           android:textAlignment="center"
+           android:textSize="30dp"
+           android:textStyle="bold"/>
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="Add Category "
+           android:textSize="20dp"
+           android:textStyle="normal"
+           android:layout_marginTop="40dp"
+           android:layout_below="@id/headercat"
+           android:id="@+id/tvaddcat"/>
+       <EditText
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:textSize="15dp"
+           android:layout_below="@id/tvaddcat"
+           android:layout_marginTop="20dp"
+           android:hint="example : Food"
+           android:id="@+id/etaddCategory"/>
+
+
+       <Button
+           android:id="@+id/btnAddCategories"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="Add Category"
+           android:layout_alignParentBottom="true"/>
+   </RelativeLayout>
+
+</FrameLayout>

@@ -36,6 +36,7 @@
         android:layout_height="match_parent"
         android:id="@+id/navMenu"
         android:layout_gravity="start"
+        android:layout_marginTop="55dp"
         app:menu="@menu/drawer_menu">
 
     </android.support.design.widget.NavigationView>

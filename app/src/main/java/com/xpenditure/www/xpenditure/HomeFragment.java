@@ -7,6 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +36,9 @@ public class HomeFragment extends Fragment {
     private PieChart pieChart;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
+    Toolbar toolbar;
+    FragmentTransaction fragmentTransaction;
+    ActionBar actionBar = null;
 
 
     public HomeFragment() {
@@ -41,14 +46,15 @@ public class HomeFragment extends Fragment {
     }
 
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View rootView=inflater.inflate(R.layout.fragment_home, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+
+//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
 
         pieChart = (PieChart) rootView.findViewById(R.id.pieChart);
@@ -65,19 +71,18 @@ public class HomeFragment extends Fragment {
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
-                    LoginFragment loginFragment= new LoginFragment();
+                    LoginFragment loginFragment = new LoginFragment();
                     FragmentManager fragmentManager = getFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.frameLayout, loginFragment );
-                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.replace(R.id.frameLayout, loginFragment);
+//                    fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
+                    ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Login");
+
                 }
                 // ...
             }
         };
-
-
-
 
 
         pieChart.setUsePercentValues(true);
@@ -93,16 +98,16 @@ public class HomeFragment extends Fragment {
 
         ArrayList<PieEntry> yValues = new ArrayList<>();
 
-        yValues.add(new PieEntry(12f , "Catagory 1"));
-        yValues.add(new PieEntry(19f , "Catagory 2"));
-        yValues.add(new PieEntry(45f , "Catagory 3"));
-        yValues.add(new PieEntry(13f , "Catagory 4"));
-        yValues.add(new PieEntry(25f , "Catagory 5"));
-        yValues.add(new PieEntry(50f , "Catagory 6"));
+        yValues.add(new PieEntry(12f, "Catagory 1"));
+        yValues.add(new PieEntry(19f, "Catagory 2"));
+        yValues.add(new PieEntry(45f, "Catagory 3"));
+        yValues.add(new PieEntry(13f, "Catagory 4"));
+        yValues.add(new PieEntry(25f, "Catagory 5"));
+        yValues.add(new PieEntry(50f, "Catagory 6"));
 
         pieChart.animateY(3000, Easing.EasingOption.EaseInOutCubic);
 
-        PieDataSet dataSet = new PieDataSet(yValues , "Catagories");
+        PieDataSet dataSet = new PieDataSet(yValues, "Catagories");
         dataSet.setSliceSpace(3f);
         dataSet.setSelectionShift(10f);
         dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
@@ -114,7 +119,7 @@ public class HomeFragment extends Fragment {
         pieChart.setData(data);
 
 
-    return rootView;
+        return rootView;
     }
 
     @Override

@@ -6,18 +6,21 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.firebase.client.Firebase;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import static com.google.android.gms.internal.zzs.TAG;
+import static android.content.ContentValues.TAG;
+
 
 
 /**
@@ -25,11 +28,12 @@ import static com.google.android.gms.internal.zzs.TAG;
  */
 public class CategoriesFragment extends Fragment {
 
-    private RecyclerView recyclerView;
+    Firebase firebase;
     private FirebaseRecyclerAdapter firebaseRecyclerAdapter;
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
-
+    Toolbar toolbar;
+    Button btnaddred;
 
 
     public CategoriesFragment() {
@@ -43,8 +47,12 @@ public class CategoriesFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_categories, container, false);
         //code idhar
+        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+//        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
 
         mAuth = FirebaseAuth.getInstance();
+
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -62,30 +70,32 @@ public class CategoriesFragment extends Fragment {
                     fragmentTransaction.replace(R.id.frameLayout, loginFragment);
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Login");
+
                 }
                 // ...
             }
         };
+        btnaddred = (Button) rootView.findViewById(R.id.Add_category);
 
+        btnaddred.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddCategoryFragment addCategoryFragment= new AddCategoryFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frameLayout, addCategoryFragment);
+                // fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Add Categories");
+            }
+        });
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-
-
-
-
-        recyclerView.setAdapter(firebaseRecyclerAdapter);
 
 
 
         return rootView;
-
-
     }
-
-
-
     @Override
     public void onStop() {
         super.onStop();
@@ -99,10 +109,6 @@ public class CategoriesFragment extends Fragment {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
-
-
-
-
 }
 
 

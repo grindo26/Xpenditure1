@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -156,6 +157,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                     fragmentTransaction.replace(R.id.frameLayout, loginFragment);
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
+                    ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Login");
+
                 }
                 // ...
             }

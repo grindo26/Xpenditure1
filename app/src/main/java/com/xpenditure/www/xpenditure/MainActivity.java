@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
                         fragmentTransaction = getSupportFragmentManager().beginTransaction();
                         fragmentTransaction.replace(R.id.frameLayout , new HomeFragment());
                         fragmentTransaction.commit();
+                        getSupportActionBar().setTitle("Xpenditure");
                         item.setChecked(true);
                         drawerLayout.closeDrawers();
                         break;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                         fragmentTransaction = getSupportFragmentManager().beginTransaction();
                         fragmentTransaction.replace(R.id.frameLayout , new MonthFragment());
                         fragmentTransaction.commit();
+                        getSupportActionBar().setTitle("Monthly");
                         item.setChecked(true);
                         drawerLayout.closeDrawers();
                         break;

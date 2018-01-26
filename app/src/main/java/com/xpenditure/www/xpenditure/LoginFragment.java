@@ -7,6 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,7 +32,7 @@ import static com.google.android.gms.internal.zzs.TAG;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LoginFragment extends Fragment implements View.OnClickListener{
+public class LoginFragment extends Fragment  implements View.OnClickListener{
 
     private Button buttonLogin;
     private EditText editTextemail;
@@ -39,6 +42,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     private FirebaseAuth.AuthStateListener mAuthListener;
     private ProgressDialog progressDialog;
     FragmentTransaction fragmentTransaction;
+    Toolbar toolbar;
+    ActionBar actionBar;
+
+
 
     public LoginFragment() {
         // Required empty public constructor
@@ -53,6 +60,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
 
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
+//        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+//        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
 
         progressDialog = new ProgressDialog(this.getActivity());
         mAuth = FirebaseAuth.getInstance();
@@ -70,6 +80,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                     fragmentTransaction.replace(R.id.frameLayout, accountFragment);
                    // fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
+                    ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Account");
+
                 }
                 // ...
             }
@@ -106,6 +118,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.frameLayout, registerFragment );
             fragmentTransaction.commit();
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Register");
+
         }
     }
 
@@ -141,9 +155,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                     fragmentTransaction.replace(R.id.frameLayout, accountFragment);
 //                    fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Account");
 
 
-                }
+
+            }
             else {
                     Toast.makeText(LoginFragment.this.getActivity(), "login unsucessfull!!", Toast.LENGTH_SHORT).show();
                     progressDialog.hide();

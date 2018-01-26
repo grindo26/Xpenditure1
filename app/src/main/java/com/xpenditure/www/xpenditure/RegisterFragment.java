@@ -8,6 +8,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,7 +48,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
+    Toolbar toolbar;
+    ActionBar actionBar;
     public RegisterFragment() {
         // Required empty public constructor
     }
@@ -57,6 +61,9 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_register, container, false);
         //code idhar
+
+        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+//        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
 
         buttonReg = (Button) rootView.findViewById(R.id.buttonReg);
@@ -85,6 +92,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                     fragmentTransaction.replace(R.id.frameLayout, accountFragment);
                     //fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
+                    ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Account");
+
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -118,6 +127,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.frameLayout, loginFragment);
             fragmentTransaction.commit();
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Login");
+
         }
 
 
@@ -196,6 +207,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                     currentUser.child("Last Name").setValue(Lname);
                     currentUser.child("Email ID").setValue(email);
                     currentUser.child("Image").setValue("Default");
+                    currentUser.child("Category").setValue("");
                    Toast.makeText(RegisterFragment.this.getActivity(),"Information Saved!!",Toast.LENGTH_LONG).show();
 
 
@@ -206,6 +218,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                     fragmentTransaction.replace(R.id.frameLayout, loginFragment);
                     //fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
+                    ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Login");
+
 
 
                 } else {
