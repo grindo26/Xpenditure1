@@ -5,5 +5,14 @@
     <string name="drawer_close">drawer_close</string>
 
     <!-- TODO: Remove or change this placeholder text -->
+
+
+    <string name="validate_required">This field is required.</string>
+    <string name="validate_min_names">Please enter at least %d names.</string>
+    <string name="validate_duplicate_name">This name is not unique.</string>
+    <string name="validate_number">Please enter a positive number.</string>
+    <string name="validate_select_split_persons">Please select at least one person below.</string>
+
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

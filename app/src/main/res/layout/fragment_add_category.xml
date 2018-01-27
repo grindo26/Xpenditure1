@@ -4,6 +4,8 @@
     android:layout_height="match_parent"
     tools:context="com.xpenditure.www.xpenditure.AddCategoryFragment">
 
+
+
     <!-- TODO: Update blank fragment layout -->
    <RelativeLayout
        android:layout_width="match_parent"
@@ -20,31 +22,32 @@
            android:textSize="30dp"
            android:textStyle="bold"/>
 
-       <TextView
+
+       <ScrollView
+           android:id="@+id/scrollbar"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:text="Add Category "
-           android:textSize="20dp"
-           android:textStyle="normal"
-           android:layout_marginTop="40dp"
-           android:layout_below="@id/headercat"
-           android:id="@+id/tvaddcat"/>
-       <EditText
+           android:layout_marginTop="10dp"
+           android:layout_marginBottom="30dp"
+           android:layout_below="@id/headercat">
+
+
+       <LinearLayout
+           android:id="@+id/CategoryView"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:textSize="15dp"
-           android:layout_below="@id/tvaddcat"
            android:layout_marginTop="20dp"
-           android:hint="example : Food"
-           android:id="@+id/etaddCategory"/>
+           android:layout_below="@id/headercat"
+           android:orientation="vertical"></LinearLayout>
 
-
+</ScrollView>
        <Button
            android:id="@+id/btnAddCategories"
            android:layout_width="match_parent"
-           android:layout_height="wrap_content"
+           android:layout_height="60dp"
            android:text="Add Category"
-           android:layout_alignParentBottom="true"/>
+           android:textColor="@color/common_google_signin_btn_text_dark_pressed"
+         android:layout_below="@id/scrollbar"/>
    </RelativeLayout>
 
 </FrameLayout>
