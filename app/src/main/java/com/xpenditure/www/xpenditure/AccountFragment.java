@@ -178,7 +178,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 //        progressDialog.setMessage("Signng Out ");
 
         mAuth = FirebaseAuth.getInstance();
-        firebase = new Firebase("https://xpenditurespr.firebaseio.com/users/" + uid);
+        firebase = new Firebase("https://xpenditure-7d2a5.firebaseio.com/users/" + uid);
 
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
