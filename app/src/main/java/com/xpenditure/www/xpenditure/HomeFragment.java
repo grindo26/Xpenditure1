@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
@@ -36,6 +37,8 @@ public class HomeFragment extends Fragment {
     private PieChart pieChart;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private Button addMoney;
+    private Button removeMoney;
     Toolbar toolbar;
     FragmentTransaction fragmentTransaction;
     ActionBar actionBar = null;
@@ -56,6 +59,8 @@ public class HomeFragment extends Fragment {
 
 //        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
+        addMoney= (Button) addMoney;
+        removeMoney = (Button)removeMoney;
 
         pieChart = (PieChart) rootView.findViewById(R.id.pieChart);
 
@@ -118,6 +123,28 @@ public class HomeFragment extends Fragment {
 
         pieChart.setData(data);
 
+
+        addMoney.setOnClickListener(new View.OnClickListener(){
+           public void onClick(View rootview){
+               AddMoneyFragment addMoneyFragment = new AddMoneyFragment();
+               FragmentManager fragmentManager = getFragmentManager();
+               FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+               fragmentTransaction.replace(R.id.frameLayout, addMoneyFragment);
+
+               fragmentTransaction.commit();
+           }
+        });
+
+        removeMoney.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View rootview){
+                RemoveMoneyFragment removeMoneyFragment = new RemoveMoneyFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frameLayout, removeMoneyFragment);
+
+                fragmentTransaction.commit();
+            }
+        });
 
         return rootView;
     }
