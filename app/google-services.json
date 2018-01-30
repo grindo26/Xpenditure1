@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "974375629586",
-    "firebase_url": "https://xpenditurespr.firebaseio.com",
-    "project_id": "xpenditurespr",
-    "storage_bucket": "xpenditurespr.appspot.com"
+    "project_number": "128582927344",
+    "firebase_url": "https://xpenditure-7d2a5.firebaseio.com",
+    "project_id": "xpenditure-7d2a5",
+    "storage_bucket": "xpenditure-7d2a5.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:974375629586:android:1d1677c3fe628e4d",
+        "mobilesdk_app_id": "1:128582927344:android:1d1677c3fe628e4d",
         "android_client_info": {
           "package_name": "com.xpenditure.www.xpenditure"
         }
       },
       "oauth_client": [
         {
-          "client_id": "974375629586-b51d3ujbcp95s8qbl260g94of924pkpn.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.xpenditure.www.xpenditure",
-            "certificate_hash": "b42b750b21c7c46b29b2520add7002e31033ec44"
-          }
-        },
-        {
-          "client_id": "974375629586-hkc4qj5t83tpaaju2lqmr83hq84s496f.apps.googleusercontent.com",
+          "client_id": "128582927344-48361r0bost8fp5a0obflqm8utma42og.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCxKwik7IxNPRGZbgyPxRLUc-yXe0UgMYs"
+          "current_key": "AIzaSyAVQkLKI3Mmu6RvutKI85BR1jGdLvemKRY"
         }
       ],
       "services": {
@@ -37,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "974375629586-hkc4qj5t83tpaaju2lqmr83hq84s496f.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

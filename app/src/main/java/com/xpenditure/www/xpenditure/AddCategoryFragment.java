@@ -1,10 +1,10 @@
 package com.xpenditure.www.xpenditure;
 
 
-import android.app.Dialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -20,16 +20,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+
+import static android.app.Activity.RESULT_OK;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class AddCategoryFragment extends Fragment implements View.OnClickListener {
+    private static final int GALLERY_INTENT = 100;
     Firebase firebase;
     FirebaseAuth mAuth;
     FirebaseDatabase database;
@@ -39,22 +47,15 @@ public class AddCategoryFragment extends Fragment implements View.OnClickListene
     private LinearLayout categoryList;
     ImageView categoryImage;
     EditText category_name;
-    Dialog myDialog;
+    private StorageReference mStorageRefrence;
+
 
     private static final int MIN_Category = 2;
     private static final int MAX_Category = 10;
 
+
     public static int count;
-
-
-//
-//    private class CategoryView {
-//        public View view;
-//        public EditText CategoryName;
-//        ImageView CategoryImage;
-//        public ImageView deleteButton;
-//    }
-//    private final List<CategoryView> categoryViews = new ArrayList<>();
+    Uri uri;
 
 
     public AddCategoryFragment() {
@@ -73,7 +74,7 @@ public class AddCategoryFragment extends Fragment implements View.OnClickListene
         chooseImage = (TextView) rootView.findViewById(R.id.chooseImage);
         categoryImage = (ImageView) rootView.findViewById(R.id.categoryImage);
         category_name = (EditText) rootView.findViewById(R.id.category_name);
-        myDialog = new Dialog(this.getActivity());
+        mStorageRefrence = FirebaseStorage.getInstance().getReference();
 
 //        CategoryView view;
 //        if (savedInstanceState != null) {
@@ -104,34 +105,48 @@ public class AddCategoryFragment extends Fragment implements View.OnClickListene
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String uid = user.getUid();
                 databaseReference = FirebaseDatabase.getInstance().getReference().child("users/" + uid + "/Category");
+                mStorageRefrence = FirebaseStorage.getInstance().getReference();
+
 //                DatabaseReference currentCategory = databaseReference.child("Category");
 
 //                Set<String> categoryNames = new HashSet<>();
 
+
+                Uri image = uri;
                 final String name = category_name.getText().toString().trim();
 //
 // for (int i = 0; i < categoryViews.size(); i++) {
 //                    String name = getCategoryName(i);
-                if (name.length() > 0 && categoryImage != null) {
-                    DatabaseReference currentCategory = databaseReference.child("Category" + count);
-                    currentCategory.child("Title").setValue(name);
-                    currentCategory.child("Image").setValue("default");
-                    count++;
-                }
-                else {
-                    Toast.makeText(AddCategoryFragment.this.getActivity(), "Fill All the Details", Toast.LENGTH_SHORT).show();
+                if (name.length() > 0 && image != null) {
+
+                    StorageReference filePath = mStorageRefrence.child("Photos").child(image.getLastPathSegment());
+                    filePath.putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Uri downloaduri = taskSnapshot.getDownloadUrl();
+                            String imageuri = downloaduri.toString().trim();
+                            DatabaseReference currentCategory = databaseReference.child("Category" + count);
+                            currentCategory.child("Title").setValue(name);
+                            currentCategory.child("Image").setValue(imageuri);
+                            count++;
+                        }
+                    });
+
+                    Toast.makeText(AddCategoryFragment.this.getActivity(), "Category Added Sucessfully", Toast.LENGTH_SHORT).show();
+
+                    CategoriesFragment categoriesFragment = new CategoriesFragment();
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.frameLayout, categoriesFragment);
+                    fragmentTransaction.commit();
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Categories");
+
+                } else {
+                    Toast.makeText(AddCategoryFragment.this.getActivity(), "Choose Image & Fill the Details", Toast.LENGTH_SHORT).show();
 
                 }
 //
 //                }
-                Toast.makeText(AddCategoryFragment.this.getActivity(), "Category Added Sucessfully", Toast.LENGTH_SHORT).show();
-
-                CategoriesFragment categoriesFragment = new CategoriesFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.frameLayout, categoriesFragment);
-                fragmentTransaction.commit();
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Categories");
 
             }
         });
@@ -328,24 +343,25 @@ public class AddCategoryFragment extends Fragment implements View.OnClickListene
     public void onClick(View view) {
         if (view == chooseImage) {
 
-            ImageView imageclose;
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+            intent.setType("image/*");
 
-            myDialog.setContentView(R.layout.category_imagepopup);
-
-            imageclose = (ImageView) myDialog.findViewById(R.id.closepopup);
-
-            imageclose.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    myDialog.dismiss();
-                }
-            });
-            myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            myDialog.show();
+            startActivityForResult(intent, GALLERY_INTENT);
 
 
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == GALLERY_INTENT && resultCode == RESULT_OK) {
+
+            uri = data.getData();
+            Picasso.with(this.getActivity()).load(uri).into(categoryImage);
+
+        }
+    }
 }
+
