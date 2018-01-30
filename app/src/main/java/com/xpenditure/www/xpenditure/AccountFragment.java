@@ -2,7 +2,10 @@ package com.xpenditure.www.xpenditure;
 
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,22 +19,28 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
+import static com.xpenditure.www.xpenditure.R.id.profileImage;
 
 
 /**
@@ -40,26 +49,28 @@ import static android.content.ContentValues.TAG;
 
 public class AccountFragment extends Fragment implements View.OnClickListener {
 
+    private static final int GALLERY_INTENT = 100;
     Button buttonlogout;
     EditText editTextEmail;
     EditText editTextPassword;
     ;
     TextView textViewEmailid;
-    TextView textViewChangeDP;
+    Button textViewChangeDP;
     TextView textViewFnmae;
     TextView textViewLname;
     ProgressDialog progressDialog;
     FirebaseAuth mAuth;
     ImageView imageViewprofileImage;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    StorageReference mStorage;
+    StorageReference mStorageRefrence;
     private DatabaseReference databaseReference;
     Firebase firebase;
-
+    Uri uri;
 
     public AccountFragment() {
         // Required empty public constructor
     }
+
 
 
     @Override
@@ -70,11 +81,11 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
 
         textViewEmailid = (TextView) rootView.findViewById(R.id.viewEmailId);
-        textViewChangeDP = (TextView) rootView.findViewById(R.id.ChangeDP);
+        textViewChangeDP = (Button) rootView.findViewById(R.id.ChangeDP);
         textViewLname = (TextView) rootView.findViewById(R.id.viewLname);
         textViewFnmae = (TextView) rootView.findViewById(R.id.viewFname);
         buttonlogout = (Button) rootView.findViewById(R.id.buttonlogout);
-        imageViewprofileImage = (ImageView) rootView.findViewById(R.id.profileImage);
+        imageViewprofileImage = (ImageView) rootView.findViewById(profileImage);
         Map<String, String> map = new Map<String, String>() {
             @Override
             public int size() {
@@ -172,13 +183,23 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         textViewChangeDP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(AccountFragment.this.getActivity(), "This function is under construction", Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                intent.setType("image/*");
+
+                startActivityForResult(intent, GALLERY_INTENT);
+
             }
         });
 //        progressDialog.setMessage("Signng Out ");
 
         mAuth = FirebaseAuth.getInstance();
         firebase = new Firebase("https://xpenditure-7d2a5.firebaseio.com/users/" + uid);
+
+
+
+
+
 
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -189,13 +210,15 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                 String Image = map.get("Image");
                 String Lname = map.get("Last Name");
 
-                Log.v("E_VALUE", "First Name : " + Fname);
-                Log.v("E_VALUE", "Email ID : " + Email);
-                Log.v("E_VALUE", "Image : " + Image);
-                Log.v("E_VALUE", "Last Name : " + Lname);
+                Log.v("E_VALUE", "First Name: " + Fname);
+                Log.v("E_VALUE", "Email ID: " + Email);
+                Log.v("E_VALUE", "Image: " + Image);
+                Log.v("E_VALUE", "Last Name: " + Lname);
 
-                textViewLname.setText(Lname);
-                textViewFnmae.setText(Fname);
+                textViewLname.setText("Last Name : "+Lname);
+                textViewFnmae.setText("First Name : "+Fname);
+                Picasso.with(AccountFragment.this.getActivity()).load(Image).into(imageViewprofileImage);
+
 
 
             }
@@ -211,6 +234,35 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == GALLERY_INTENT && resultCode == RESULT_OK) {
+
+            uri = data.getData();
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            String uid = user.getUid();
+            databaseReference = FirebaseDatabase.getInstance().getReference().child("users/" + uid );
+            mStorageRefrence = FirebaseStorage.getInstance().getReference();
+            StorageReference filePath = mStorageRefrence.child("uid").child(uri.getLastPathSegment());
+            filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloaduri = taskSnapshot.getDownloadUrl();
+                    String imageuri = downloaduri.toString().trim();
+                    databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
+                    DatabaseReference currentUser = databaseReference.child(mAuth.getCurrentUser().getUid());
+                    currentUser.child("Image").setValue(imageuri);
+                    Picasso.with(AccountFragment.this.getActivity()).load(imageuri).into(imageViewprofileImage);
+
+
+                }
+            });
+
+
+        }
+    }
     @Override
     public void onClick(View view) {
         if (view == buttonlogout) {

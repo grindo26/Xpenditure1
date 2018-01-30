@@ -6,13 +6,13 @@
     tools:context="com.xpenditure.www.xpenditure.AddCategoryFragment">
 
 
-
     <!-- TODO: Update blank fragment layout -->
 
     <RelativeLayout
         android:id="@+id/parentLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="20dp">
 
         <TextView
             android:id="@+id/headercat"
@@ -25,52 +25,42 @@
             android:textStyle="bold" />
 
 
-        <LinearLayout
-            android:id="@+id/LLaouyt"
+        <ImageView
+            android:id="@+id/categoryImage"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_below="@id/headercat"
+            android:padding="10dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@android:drawable/ic_menu_edit"
+            android:layout_marginTop="20dp"/>
+
+        <TextView
+
+            android:id="@+id/chooseImage"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/categoryImage"
+            android:text="Choose Image"
+            android:textAlignment="center"
+            android:textSize="20sp" />
+
+
+        <EditText
+            android:id="@+id/category_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/headercat"
-            android:layout_marginTop="50dp">
+            android:layout_below="@id/categoryImage"
+            android:layout_marginTop="25dp"
+            android:inputType="text"
+            android:hint=" Enter Category Name"/>
 
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/categoryImage"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:padding="10dp"
-                    app:srcCompat="@android:drawable/ic_menu_edit" />
-
-                <TextView
-
-                    android:id="@+id/chooseImage"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/categoryImage"
-                    android:text="choose"
-                    android:textAlignment="center"
-                    android:textSize="20sp" />
-            </RelativeLayout>
-
-            <EditText
-                android:id="@+id/category_name"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_weight="1"
-                android:inputType="text" />
-
-
-        </LinearLayout>
 
         <Button
             android:id="@+id/btnAddCategories"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_below="@id/LLaouyt"
+            android:layout_below="@id/category_name"
             android:layout_marginTop="50dp"
             android:text="Add Category"
             android:textColor="@color/common_google_signin_btn_text_dark_pressed" />

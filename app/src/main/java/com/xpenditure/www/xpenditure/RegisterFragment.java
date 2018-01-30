@@ -139,6 +139,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         String password = editTextPassword.getText().toString().trim();
         final String Fname = editTextFnmae.getText().toString().trim();
         final String Lname = editTextLname.getText().toString().trim();
+
 //        String mobile= editTextMobile.getText().toString().trim();
 
 
@@ -194,6 +195,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                     String Lname = editTextLname.getText().toString().trim();
 //                    String mobile= editTextFnmae.getText().toString().trim();
                     String email = editTextEmail.getText().toString().trim();
+                    final int CategoryCount = 0;
+                    final int ExpensesCount = 0;
 
 //                    userInformation userInformation= new userInformation();
 
@@ -206,8 +209,10 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                     currentUser.child("First Name").setValue(Fname);
                     currentUser.child("Last Name").setValue(Lname);
                     currentUser.child("Email ID").setValue(email);
-                    currentUser.child("Image").setValue("Default");
+                    currentUser.child("Image").setValue("default");
                     currentUser.child("Category").setValue("");
+                    currentUser.child("Category Count").setValue(CategoryCount);
+                    currentUser.child("Expense Count").setValue(ExpensesCount);
                    Toast.makeText(RegisterFragment.this.getActivity(),"Information Saved!!",Toast.LENGTH_LONG).show();
 
 
