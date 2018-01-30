@@ -29,7 +29,7 @@
             android:textColor="@color/colorAccent"
             android:textAllCaps="true"
             android:textAlignment="center"
-            android:textSize="30sp"
+            android:textSize="20sp"
             android:layout_marginLeft="20dp"
             />
     </LinearLayout>
