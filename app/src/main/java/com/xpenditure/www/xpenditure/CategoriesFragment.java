@@ -7,20 +7,26 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.firebase.client.Firebase;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import static android.content.ContentValues.TAG;
-
 
 
 /**
@@ -34,7 +40,9 @@ public class CategoriesFragment extends Fragment {
     FirebaseAuth.AuthStateListener mAuthListener;
     Toolbar toolbar;
     Button btnaddred;
+    public RecyclerView recyclerView;
 
+    DatabaseReference databaseReferance;
 
     public CategoriesFragment() {
         // Required empty public constructor
@@ -48,6 +56,7 @@ public class CategoriesFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_categories, container, false);
         //code idhar
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        recyclerView = (RecyclerView)rootView.findViewById(R.id.recyclerView) ;
 //        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
 
@@ -91,11 +100,51 @@ public class CategoriesFragment extends Fragment {
             }
         });
 
-
-
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = user.getUid();
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        databaseReferance = FirebaseDatabase.getInstance().getReference().child("/users/"+uid+"/Category");
+        FirebaseRecyclerAdapter<CategoriesRecycler ,CategoriesRecyclerViewHolder > adapter= new FirebaseRecyclerAdapter<CategoriesRecycler, CategoriesRecyclerViewHolder>(
+                CategoriesRecycler.class,
+                R.layout.category_cards,
+                CategoriesRecyclerViewHolder.class,
+                databaseReferance
+        ) {
+            @Override
+            protected void populateViewHolder(CategoriesRecyclerViewHolder viewHolder, CategoriesRecycler model, int position) {
+                viewHolder.setTitle(model.getTitle());
+                viewHolder.setImage(model.getImage());
+            }
+        };
+            recyclerView.setAdapter(adapter);
 
         return rootView;
     }
+
+    public static class CategoriesRecyclerViewHolder extends RecyclerView.ViewHolder{
+        TextView CatTitle;
+        ImageView CatImage;
+
+
+        public CategoriesRecyclerViewHolder(View catgview){
+            super(catgview);
+            CatTitle = (TextView) catgview.findViewById(R.id.categoryNameDisplay);
+            CatImage = (ImageView) catgview.findViewById(R.id.categoryImageDisplay);
+
+        }
+
+
+        public void setTitle(String title) {
+            CatTitle.setText(title);
+        }
+
+        public void setImage(String image) {
+            Picasso.with(itemView.getContext()).load(image).into(CatImage);
+        }
+    }
+
+
     @Override
     public void onStop() {
         super.onStop();
