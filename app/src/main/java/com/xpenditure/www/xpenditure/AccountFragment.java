@@ -215,8 +215,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                 Log.v("E_VALUE", "Image: " + Image);
                 Log.v("E_VALUE", "Last Name: " + Lname);
 
-                textViewLname.setText(Lname);
-                textViewFnmae.setText(Fname);
+                textViewLname.setText("Last Name : "+Lname);
+                textViewFnmae.setText("First Name : "+Fname);
                 Picasso.with(AccountFragment.this.getActivity()).load(Image).into(imageViewprofileImage);
 
 

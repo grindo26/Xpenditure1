@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,6 +33,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+
+import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -48,13 +54,15 @@ public class AddCategoryFragment extends Fragment implements View.OnClickListene
     ImageView categoryImage;
     EditText category_name;
     private StorageReference mStorageRefrence;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
 
 
     private static final int MIN_Category = 2;
     private static final int MAX_Category = 10;
 
 
-    public static int count;
+
     Uri uri;
 
 
@@ -75,6 +83,7 @@ public class AddCategoryFragment extends Fragment implements View.OnClickListene
         categoryImage = (ImageView) rootView.findViewById(R.id.categoryImage);
         category_name = (EditText) rootView.findViewById(R.id.category_name);
         mStorageRefrence = FirebaseStorage.getInstance().getReference();
+        final CountManager countManager = new CountManager();
 
 //        CategoryView view;
 //        if (savedInstanceState != null) {
@@ -102,6 +111,7 @@ public class AddCategoryFragment extends Fragment implements View.OnClickListene
 //
 //                validate();
 
+
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String uid = user.getUid();
                 databaseReference = FirebaseDatabase.getInstance().getReference().child("users/" + uid + "/Category");
@@ -117,22 +127,50 @@ public class AddCategoryFragment extends Fragment implements View.OnClickListene
 //
 // for (int i = 0; i < categoryViews.size(); i++) {
 //                    String name = getCategoryName(i);
-                if (name.length() > 0 && image != null) {
 
-                    StorageReference filePath = mStorageRefrence.child("Photos").child(image.getLastPathSegment());
+
+                if (name.length() > 0 && image != null) {
+                    mAuth = FirebaseAuth.getInstance();
+                    user = FirebaseAuth.getInstance().getCurrentUser();
+
+                    firebase = new Firebase("https://xpenditure-7d2a5.firebaseio.com/users/" + uid);
+
+                    firebase.addValueEventListener(new ValueEventListener() {
+                                                       @Override
+                                                       public void onDataChange(DataSnapshot dataSnapshot) {
+                                                           Map<Integer, Integer> map = dataSnapshot.getValue(Map.class);
+                                                           int countCat = map.get("Category Count");
+
+
+                                                           Log.v("E_VALUE", "Category Count " + countCat);
+
+                                                           countManager.getCountCategories(countCat);
+
+                                                       }
+
+                                                       @Override
+                                                       public void onCancelled(FirebaseError firebaseError) {
+
+                                                       }
+                                                   });
+
+
+                        StorageReference filePath = mStorageRefrence.child("Photos").child(image.getLastPathSegment());
                     filePath.putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            int count = countManager.returnCategoryCount();
                             Uri downloaduri = taskSnapshot.getDownloadUrl();
                             String imageuri = downloaduri.toString().trim();
                             DatabaseReference currentCategory = databaseReference.child("Category" + count);
                             currentCategory.child("Title").setValue(name);
                             currentCategory.child("Image").setValue(imageuri);
                             count++;
+                            countManager.setCountCategories( count );
                         }
                     });
-
                     Toast.makeText(AddCategoryFragment.this.getActivity(), "Category Added Sucessfully", Toast.LENGTH_SHORT).show();
+
 
                     CategoriesFragment categoriesFragment = new CategoriesFragment();
                     FragmentManager fragmentManager = getFragmentManager();
@@ -149,6 +187,8 @@ public class AddCategoryFragment extends Fragment implements View.OnClickListene
 //                }
 
             }
+
+
         });
 
 
