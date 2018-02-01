@@ -1,33 +1,42 @@
 package com.xpenditure.www.xpenditure;
 
 
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+        import android.content.Intent;
+        import android.graphics.Color;
+        import android.os.Bundle;
+        import android.support.annotation.NonNull;
+        import android.support.v4.app.Fragment;
+        import android.support.v4.app.FragmentManager;
+        import android.support.v4.app.FragmentTransaction;
+        import android.support.v7.app.ActionBar;
+        import android.support.v7.app.AppCompatActivity;
+        import android.support.v7.widget.Toolbar;
+        import android.util.Log;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.Button;
+        import android.widget.TextView;
 
-import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
+        import com.firebase.client.DataSnapshot;
+        import com.firebase.client.Firebase;
+        import com.firebase.client.FirebaseError;
+        import com.firebase.client.ValueEventListener;
+        import com.github.mikephil.charting.animation.Easing;
+        import com.github.mikephil.charting.charts.PieChart;
+        import com.github.mikephil.charting.data.PieData;
+        import com.github.mikephil.charting.data.PieDataSet;
+        import com.github.mikephil.charting.data.PieEntry;
+        import com.github.mikephil.charting.utils.ColorTemplate;
+        import com.google.firebase.auth.FirebaseAuth;
+        import com.google.firebase.auth.FirebaseUser;
+        import com.google.firebase.database.DatabaseReference;
+        import com.google.firebase.database.FirebaseDatabase;
 
-import static com.google.android.gms.internal.zzs.TAG;
+        import java.util.ArrayList;
+
+        import static com.google.android.gms.internal.zzs.TAG;
 
 
 /**
@@ -39,7 +48,11 @@ public class HomeFragment extends Fragment {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private Button addMoney;
     private Button removeMoney;
+    Firebase mref;
+    Integer total_money;
+    TextView money;
     Toolbar toolbar;
+    DatabaseReference databaseReference;
     FragmentTransaction fragmentTransaction;
     ActionBar actionBar = null;
 
@@ -53,14 +66,15 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+
 
 //        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
-        addMoney= (Button) addMoney;
-        removeMoney = (Button)removeMoney;
+        addMoney= (Button) rootView.findViewById(R.id.addMoney);
+        removeMoney = (Button)rootView.findViewById(R.id.removeMoney);
 
         pieChart = (PieChart) rootView.findViewById(R.id.pieChart);
 
@@ -123,28 +137,58 @@ public class HomeFragment extends Fragment {
 
         pieChart.setData(data);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = user.getUid();
 
-        addMoney.setOnClickListener(new View.OnClickListener(){
-           public void onClick(View rootview){
-               AddMoneyFragment addMoneyFragment = new AddMoneyFragment();
-               FragmentManager fragmentManager = getFragmentManager();
-               FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-               fragmentTransaction.replace(R.id.frameLayout, addMoneyFragment);
+        mref = new Firebase("https://xpenditure-7d2a5.firebaseio.com/users/"+uid+"/Total");
+        mref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                total_money= dataSnapshot.getValue(Integer.class);
 
-               fragmentTransaction.commit();
-           }
+                money = (TextView) rootView.findViewById(R.id.money);
+                money.setText(total_money.toString());
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
         });
 
-        removeMoney.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View rootview){
+        addMoney.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddMoneyFragment addMoneyFragment = new AddMoneyFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frameLayout, addMoneyFragment);
+
+                fragmentTransaction.commit();
+
+            }
+        });
+
+        removeMoney.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 RemoveMoneyFragment removeMoneyFragment = new RemoveMoneyFragment();
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.frameLayout, removeMoneyFragment);
 
                 fragmentTransaction.commit();
+
             }
         });
+
+
+
+
+
+
+
 
         return rootView;
     }

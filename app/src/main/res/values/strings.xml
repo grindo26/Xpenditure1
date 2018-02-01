@@ -18,4 +18,6 @@
     <string name="Profiledp" />
     <string name="select_category">Select Category:</string>
     <string name="enter_amount">Enter Amount:</string>
+    <string name="others_radio">Others</string>
+    <string name="title_activity_home_fragment2">HomeFragment2</string>
 </resources>
