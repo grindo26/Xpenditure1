@@ -1,6 +1,8 @@
 package com.xpenditure.www.xpenditure;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -25,6 +27,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 import static android.content.ContentValues.TAG;
 
@@ -99,6 +105,21 @@ public class RemoveMoneyFragment extends Fragment {
             @Override
             protected void populateViewHolder(RemoveRecyclerViewHolder viewHolder, RemoveRecycler model, int position) {
                 viewHolder.setTitle(model.getTitle());
+                final String pos_key = getRef(position).getKey();
+                viewHolder.CatTitle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        FragmentManager fragmentManager = getFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("title", pos_key);
+                        EnterValueFragment enterValueFragment = new EnterValueFragment();
+                        enterValueFragment.setArguments(bundle);
+                        fragmentTransaction.replace(R.id.frameLayout,enterValueFragment);
+                        fragmentTransaction.commit();
+                    }
+                });
             }
         };
         recyclerView.setAdapter(adapter);
@@ -109,9 +130,13 @@ public class RemoveMoneyFragment extends Fragment {
     public static class RemoveRecyclerViewHolder extends RecyclerView.ViewHolder {
         TextView CatTitle;
 
+        //ArrayList<RemoveRecycler> cat = new ArrayList<>();
+        //Context ctx;
+
 
         public RemoveRecyclerViewHolder(View catgview) {
             super(catgview);
+
             CatTitle = (TextView) catgview.findViewById(R.id.categoryNameDisplay);
 
 
@@ -121,7 +146,6 @@ public class RemoveMoneyFragment extends Fragment {
         public void setTitle(String title) {
             CatTitle.setText(title);
         }
-
 
     }
 

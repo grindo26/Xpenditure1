@@ -124,6 +124,7 @@ public class AddCategoryFragment extends Fragment implements View.OnClickListene
 
                 Uri image = uri;
                 final String name = category_name.getText().toString().trim();
+                final int expenses = 0;
 //
 // for (int i = 0; i < categoryViews.size(); i++) {
 //                    String name = getCategoryName(i);
@@ -165,6 +166,7 @@ public class AddCategoryFragment extends Fragment implements View.OnClickListene
                             DatabaseReference currentCategory = databaseReference.child("Category" + count);
                             currentCategory.child("Title").setValue(name);
                             currentCategory.child("Image").setValue(imageuri);
+                            currentCategory.child("Expenses").setValue(expenses);
                             count++;
                             countManager.setCountCategories( count );
                         }
