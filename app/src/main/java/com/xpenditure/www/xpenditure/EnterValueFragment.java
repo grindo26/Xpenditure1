@@ -38,14 +38,19 @@ public class EnterValueFragment extends Fragment {
     EditText Notes;
     Calendar c = Calendar.getInstance();
     SimpleDateFormat simpleDateFormat= new SimpleDateFormat("dd-MM-yyyy");
+    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
     String note;
     Integer Value;
     Integer Expenses;
     String Entered;
     Firebase mref;
+    Firebase mref1;
+    Firebase mref2;
+    Firebase mref3;
     Button Spent;
     Integer total;
     String Date;
+    String time;
     String uid;
     String title,selected;
     @Nullable
@@ -57,10 +62,12 @@ public class EnterValueFragment extends Fragment {
         Value_edit = (EditText) rootView.findViewById(R.id.Value_edit);
         Spent = (Button)rootView.findViewById(R.id.button_spent);
         Date = simpleDateFormat.format(c.getTime());
+        time = sdf.format((c.getTime()));
         Bundle bundle = getArguments();
         title= String.valueOf(bundle.getString("title"));
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         uid = user.getUid();
+        mref1 = new Firebase("https://xpenditure-7d2a5.firebaseio.com/users/"+uid+"/Total");
         mref = new Firebase("https://xpenditure-7d2a5.firebaseio.com/users/"+uid+"/Category/"+title+"/Title");
         mref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -74,61 +81,63 @@ public class EnterValueFragment extends Fragment {
 
             }
         });
+        mref1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                total = dataSnapshot.getValue(Integer.class);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
+        mref2 = new Firebase("https://xpenditure-7d2a5.firebaseio.com/users/"+uid+"/Category/"+title+"/Expenses");
+        mref2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Expenses = dataSnapshot.getValue(Integer.class);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
 
         Spent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Firebase mref1 = new Firebase("https://xpenditure-7d2a5.firebaseio.com/users/"+uid+"/Total");
                 Entered = Value_edit.getText().toString();
                 Value = Integer.parseInt(Entered);
                 note = Notes.getText().toString();
-                mref1.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        total = dataSnapshot.getValue(Integer.class);
-                        if (total-Value<0)
-                        {
-                            Toast.makeText(EnterValueFragment.this.getActivity(), "Warning your balance goes into negative", Toast.LENGTH_SHORT).show();
-                        }
-                        total-=Value;
-                        mref1.setValue(total);
-                    }
+                total=total-Value;
+                mref1.setValue(total);
+                Expenses++;
+                mref2.setValue(Expenses);
 
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-
-                    }
-                });
-                final Firebase mref2 = new Firebase("https://xpenditure-7d2a5.firebaseio.com/users/"+uid+"/Category/"+title+"/Expenses");
-                mref2.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                     Expenses = dataSnapshot.getValue(Integer.class);
-                     Expenses++;
-                     mref2.setValue(Expenses);
-                    }
-
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-
-                    }
-                });
                 final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users/"+uid+"/Category/"+title);
-                final Firebase mref3 = new Firebase("https://xpenditure-7d2a5.firebaseio.com/users/"+uid+"/Category/"+title);
+                mref3 = new Firebase("https://xpenditure-7d2a5.firebaseio.com/users/"+uid+"/Category/"+title);
                 mref3.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for(DataSnapshot data: dataSnapshot.getChildren()){
                             if(data.child(Date).exists()){
                                 final DatabaseReference dateReference = FirebaseDatabase.getInstance().getReference().child("users/"+uid+"/Category/"+title+"/"+Date);
-                                dateReference.child("Amount:").setValue(Entered);
-                                dateReference.child("Notes:").setValue(note);
+                                for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                                    if(dataSnapshot1.child(time).exists()){
+                                        final  DatabaseReference dref = FirebaseDatabase.getInstance().getReference().child("users/"+uid+"/Category/"+title+"/"+Date+"/"+time);
+                                        dref.child("Amount:").setValue(Entered);
+                                        dref.child("Notes:").setValue(note);
+                                        break;
+                                    }
+                                }
                                 break;
                             }
                             else {
                                 DatabaseReference entry = databaseReference.child(Date);
-                                entry.child("Amount:").setValue(Entered);
-                                entry.child("Notes:").setValue(note);
+                                entry.child(time);
+                                final  DatabaseReference dref = FirebaseDatabase.getInstance().getReference().child("users/"+uid+"/Category/"+title+"/"+Date+"/"+time);
+                                dref.child("Amount:").setValue(Entered);
+                                dref.child("Notes:").setValue(note);
                             }
                         }
                     }

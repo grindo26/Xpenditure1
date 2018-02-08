@@ -20,4 +20,5 @@
     <string name="enter_amount">Enter Amount:</string>
     <string name="others_radio">Others</string>
     <string name="title_activity_home_fragment2">HomeFragment2</string>
+    <string name="add_button">Add</string>
 </resources>
